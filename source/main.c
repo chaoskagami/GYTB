@@ -537,33 +537,34 @@ int main() {
 		svcSleepThread(6000000000LL);
 		goto end;
 	}
-	
-	print2("Writing to extdata...\n");
-	ret = writeToExtdata(nnidNum);
-	if (ret == 0xC92044E6) {
-		print2("-------------------------------------\nBadge file in use. Try loading all\nbadges in your badge case and waiting\nbefore launching.\n-------------------------------------\n");
-		svcSleepThread(7000000000LL);
-		goto end;
-	} else if (ret == 0) {
-		print2("Successfully!\n");
-	} else {
-		print2("WHAT IS WRONG WITH THE ELF. %08x\n", ret);
-		svcSleepThread(6000000000LL);
-		goto end;
-	}
-	
-	
-	end:
-	
-	print2("\nPress any button to exit.\n");
+
+	print2("[X] Inject badges and exit\n[Any other] Just exit\n");
 
 	while(aptMainLoop()) {
 		gspWaitForVBlank();
 		hidScanInput();
 		kDown = hidKeysDown();
-		if (kDown !=0) break;
+		if (kDown != 0) break;
 	}
-	
+
+	if (kDown == KEY_X) {
+		print2("Writing to extdata...\n");
+		ret = writeToExtdata(nnidNum);
+		if (ret == 0xC92044E6) {
+			print2("-------------------------------------\nBadge file in use. Try loading all\nbadges in your badge case and waiting\nbefore launching.\n-------------------------------------\n");
+			svcSleepThread(7000000000LL);
+			goto end;
+		} else if (ret == 0) {
+			print2("Successfully!\n");
+		} else {
+			print2("WHAT IS WRONG WITH THE ELF. %08x\n", ret);
+			svcSleepThread(6000000000LL);
+			goto end;
+		}
+	}
+
+	end:
+
 	gfxExit();
 	return 0;
 }
