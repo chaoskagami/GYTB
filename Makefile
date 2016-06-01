@@ -136,20 +136,9 @@ APP_ROMFS := $(TOPDIR)/$(ROMFS)
 RSF := $(TOPDIR)/tools/template.rsf
 COMMON_MAKEROM_PARAMS := -rsf $(RSF) -target t -exefslogo -elf $(OUTPUT_FILE).elf -icon icon.icn -banner banner.bnr -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(APP_PRODUCT_CODE)" -DAPP_UNIQUE_ID="$(APP_UNIQUE_ID)" -DAPP_ROMFS="$(APP_ROMFS)" -DAPP_SYSTEM_MODE="64MB" -DAPP_SYSTEM_MODE_EXT="Legacy"
 
-ifeq ($(OS),Windows_NT)
-	MAKEROM = $(TOPDIR)/tools/makerom.exe
-	BANNERTOOL = $(TOPDIR)/tools/bannertool.exe
-else
-	UNAME_S := $(shell uname -s)
-	ifeq ($(UNAME_S),Linux)
-		MAKEROM = $(TOPDIR)/tools/makerom-linux
-		BANNERTOOL = $(TOPDIR)/tools/bannertool-linux
-	endif
-	ifeq ($(UNAME_S),Darwin)
-		MAKEROM = $(TOPDIR)/tools/makerom-mac
-		BANNERTOOL = $(TOPDIR)/tools/bannertool-mac
-	endif
-endif
+# I'm going to assume these are in your path, since the Linux one segv's. Bugs. Bleh.
+MAKEROM := makerom
+BANNERTOOL := bannertool
 
 _3DSXFLAGS += --smdh=$(OUTPUT_FILE).smdh
 ifneq ("$(wildcard $(TOPDIR)/$(ROMFS))","")
